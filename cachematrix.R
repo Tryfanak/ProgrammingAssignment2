@@ -1,26 +1,35 @@
-## Put comments here that give an overall description of what your
-## functions do
+## These functions calculate the inverse of a matrix, cache it, and retrieve it
+## if the inverse of the same matrix is requested again
+##   makeCacheMatrix - Creates matrix object and get/set methods
+##   cacheSolve - Calculates and caches inverse, or retrieves cached inverse
 
-## Write a short comment describing this function
+## makeCacheMatrix - Function to create matrix object and get/set methods
 
-makeCacheMatrix <- function(x = matrix()) {
-    MatRaw <- x  # Make my on copy of the input matrix, with a memorable name
-    cachedMatInv <- NULL  # Will be used to store cached inverse
+makeCacheMatrix <- function(xMat = matrix()) {
+    cachedInv <- NULL  # Will be used to store cached inverse
     
+    # Create set function 
+    #   Purpose   - Changes input matrix for an array object that already exists
+    #   Arguments - New input matrix
+    #   Returns -   not used
+    set <- function (yMat) {
+        xMat <<- yMat
+        cachedInv <<- NULL
+    }
+
     # Create get function 
     #   Purpose   - Retrieve input matrix for makeCacheMatrix object
     #   Arguments - None
     #   Returns -   Matrix passed as an argument to makeCacheMatrix when it was
     #               called to create the object with this function as a method
-    get <- function () { MatRaw }  
-    set <- function () { MatRaw }  
+    get <- function () { xMat }  
     
     # Create setmatinv function 
     #   Purpose   - Cache calculated inverse matrix for object (superassigment)
     #   Arguments - Inverse matrix to be stored (Really any data type)
     #   Returns -   not used
     setmatinv <- function(xMatInv) {
-        cachedMatInv <<- xMatInv
+        cachedInv <<- xMatInv
     }
    
     # Create getmatinv function 
@@ -28,7 +37,7 @@ makeCacheMatrix <- function(x = matrix()) {
     #   Arguments - None
     #   Returns -   Cached inverse matrix (saved by earlier cal to setmatinv)
     getmatinv <- function() {
-        cachedMatInv
+        cachedInv
     }
     
     list( set=set, 
@@ -40,15 +49,15 @@ makeCacheMatrix <- function(x = matrix()) {
 
 ## Write a short comment describing this function
 
-cacheSolve <- function(x, ...) {
-    matInv <- x$getmatinv()
+cacheSolve <- function(xObj, ...) {
+    matInv <- xObj$getmatinv()
     if (!is.null(matInv)) {
-        message("getting cached inverse")
+        message("Found cached inverse")
         return(matInv)
     }
-    matRaw <- x$get()
+    matRaw <- xObj$get()
     matInv <- solve(matRaw)
-    x$setmatinv(matInv)
+    xObj$setmatinv(matInv)
     matInv
     
 }
